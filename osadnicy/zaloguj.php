@@ -5,7 +5,7 @@ require_once "connect.php"; //<< 2 >>
 $polaczenie = @new MySQLi($host, $db_user, $db_password, $db_name); // << 3 >>
 
 if($polaczenie->connect_errno!=0){  //<< 4 >>
-    echo "Error: ".$polaczenie->connect_errno ." Opis: ".$polaczenie->connect_error;
+    echo "Error: ".$polaczenie->connect_errno; // ." Opis: ".$polaczenie->connect_error; << 7 >>
 } else {      //  << 5 >>
     $login = $_POST['login'];
     $haslo = $_POST['haslo'];
@@ -94,5 +94,7 @@ $polaczenie->connect_errno => w tym wyraznieniu $polaczenie TO OBIEKT a connect_
  << 6 >> OD RAZU ZAMYKAMY POLACZENIE - PAMIETAJ O TYM
     robimy to w else, nie poza ifem ! No bo zamkniecie polaczenia nieotwartego generuje blad
 
+<< 7 >> usuwamy opis bledu bo widac nazwe uzytkownika bazy danych a po ciula komus postronnemu ta informacja !    
 
+36 MINUTA
  -->
