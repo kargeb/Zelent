@@ -3,11 +3,13 @@
 $login = $_POST['login'];
 $haslo = $_POST['haslo'];
 
-echo $login."<br>".$haslo;
+echo $login."<br>".$haslo;  //<< 1 >>
 
 ?>
 
 <!-- 
+Po przeslaniu danych logowania i sprawdzeniu czy dochodzą << 1 >>
+
 
 Tworzymy baze danych w phpmyadmin
 
