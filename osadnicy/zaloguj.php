@@ -1,5 +1,7 @@
 <?php
 
+session_start();    // << 15 >>
+
 require_once "connect.php"; //<< 2 >>
 
 $polaczenie = @new MySQLi($host, $db_user, $db_password, $db_name); // << 3 >>
@@ -10,9 +12,37 @@ if($polaczenie->connect_errno!=0){  //<< 4 >>
     $login = $_POST['login'];
     $haslo = $_POST['haslo'];
 
-    echo "It works";
+    // echo "It works";
 
     $sql = " SELECT * FROM uzytkownicy WHERE user='$login' AND pass='$haslo' "; // << 8 >>
+
+    if( $rezultat = @$polaczenie->query($sql) ) {
+
+        $ilu_userow = $rezultat->num_rows;  //  << 10 >>
+
+        if($ilu_userow>0) {// w zasadzie moze byc tez == 1
+            
+            $wiersz = $rezultat->fetch_assoc(); // << 11 >>
+            // $user = $wiersz['user']; - test przed wprowadzeniem do sesji
+            $_SESSION['user'] = $wiersz['user']; // Taki sam zapis jak $_POST !!  // << 14 >>
+            $_SESSION['drewno'] = $wiersz['drewno'];    // << 16 >>
+            $_SESSION['kamien'] = $wiersz['kamien'];
+            $_SESSION['zboze'] = $wiersz['zboze'];
+            $_SESSION['email'] = $wiersz['email'];
+            $_SESSION['dnipremium'] = $wiersz['dnipremium'];
+
+            unset($_SESSION['blad']);    // << 18 >>
+            
+            $rezultat->close(); // $rezultat->free();,  $rezultat->free_result();   << 12 >>
+
+            header('Location: gra.php');  //  << 13 >>
+            
+        } else {
+
+            $_SESSION['blad'] = '<span style="color:red">Spierdalaj!</span>'; //  << 17 >>
+            header('Location: index.php');
+        }
+    }
 
     $polaczenie->close(); // << 6 >>
 }
@@ -99,7 +129,69 @@ $polaczenie->connect_errno => w tym wyraznieniu $polaczenie TO OBIEKT a connect_
 << 7 >> usuwamy opis bledu bo widac nazwe uzytkownika bazy danych a po ciula komus postronnemu ta informacja !    
     ktos zobaczy jaki mamy login admina "root" i juz bedzie wenszyl chuj
 
+<< 8 >> Tworzymy pierwsze zapytanie ! Jest to lanuch wiec musi byc w cudzyslowiu
+    no i zapamiętaj 
+    ZAŁE ZAPYTANIE ZAPISUJEM W CUDZYSLOWIE A ZMIENNE W APOSTROFACH!
+        $sql = " SELECT * FROM uzytkownicy WHERE user='$login' AND pass='$haslo' ";
+
+<< 9 >> Wysylyamy zapytanie!
+    robimy to METODĄ query w obiekcie $polacznie 
+        if( $rezultat = @$polaczenie->query($sql) )
+    ROBIMY TO W IFIE!
+    No bo jak bedzie cos nie tak z polaczniem to meoda query ZWRÓCI FALSE i po prostu if sie nie wykona,
+    a bedziemy w nim wyciagac rozne dane wiec nalepiej zeby faktycznie sie nie wykonaywal
+    No i nie chodzi o czywiscie o brak uzytkownika tylko np literowke w zaptyaniu]
+
+<< 10 >> Tworzymy zmienna w ktorej zapiszemy wynik naszego wyszukiwania ktory moze byc 1 lub 0
+    $ilu_userow = $rezultat->num_rows;
+        oczywiscie to my musimy w procesie rejestarcji zadbac o to zeby 
+        nikt nie zalozyl dwuch identycnzych nazw uzytkownika
+
+<< 11 >> Tworzymy tablice ASOCJACYJNA ktora bedzie miala takie same zmienne jak nazwy kolumn w bazie
+        $wiersz = $rezultat->fetch_assoc();
+
+    TABLICA ASOCJACYJNA to taka tablica która zamiast przypisywać wartości do numerów komórek
+    PRZYPISUJE JE DO NAZW KOLUMN Z KTRÓYCH JE POBRAŁA
+    A wiec INDEXAMI SA KONKRETNE WARTOSCI A NIE SUCHE NUMERY KOMÓREK
+
+    No i teraz zeby odczytac np haslo nie musimy sie glowic pod jaka komorka ono jest w tabeli,
+    tylko odczytujemy je za pomoca $wiersz[pass] !! (zmiast $wiersz[2])
+
+<< 12 >> Juz teraz ustawiamy linijke ktora WYCZYSCI NAM CALA PAMIEC o wszystkich pobranych danych 
+    gdy juz wyciagniemy wszystko co nas interesuje    
+        $rezultat->close(); // $rezultat->free();,  $rezultat->free_result();
+
+    Te pozostale 2 metody TO JEST DOKLADNIE TO SAMO tylko pod innym aliasem
+
+    MUSISZ TO ROBIC ZAWSZE !!!!!!!
+    Jesli tego nie zrobisz to za kazdym razem na swiecie umiera maly kotek
+
+<< 13 >>    UWAGA ! wyników wyszukwiania nie chcemy miec na stronie logowania ale w nowym pliku juz z wlasciwa gra
+    takze trzeba zrobic PRZEKIEROWANIE !
+    a robi sie to jedną konkretną linijką 
+        header('Location: gra.php');
+
+    No i musimy oczywiscie sworzyc ten nowy plik "gra.php"
+
+<< 14>> TWORZYMY SESJE
+     $_SESSION['user'] = $wiersz['user'];
+
+<< 15 >> aby w ogole sesja mogla dzialaj musimy ja aktywowac NA SAMYM POCZATKU DOKUMENTU
+    session_start();
+ 
+    UWAGA! Nie bedzie pozniej juz zadnego session_end ! 
+    Po prostu trzeba zapamietac ze w kazdym dokumencie korzystajacym z sesji
+    trzeba NA SAMEJ GORZE taka sesje zainicjowac I TYLE
+    wiec to samo robimy we wszystkich plikach gdzie ta sesja bedzie potrzebna ("gra.php", "index.php")
+
+<< 16 >> Wkladamy wszystkie potrzebne nam dane
+<< 17 >> obsługujemy nieudane logowanie, co sie tu dzieje to juz wiesz (przekierowanie na strone logowania)
+    Wiec w index.php TEZ DODAJEMY OSBLUGE SESJI 
+<< 18 >>  USUWAMY zmienna 
+        unset($_SESSION['blad'])    
+        po chuj nam ona tutaj, nie trza jej tutaj
 
 
-36 MINUTA
+1:09 MINUTA  -  przed opisaniem tego ze po zalogowaniu na stronie logowania tez bylo wiadomo ze juz po zalogowaniu
+jest i nie trza sie juz logowac
  -->

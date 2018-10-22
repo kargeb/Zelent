@@ -28,6 +28,10 @@ od razu trzeba sobie powiedziec przed czym trzeba sie zabezpieczyc:
 
 
  -->
+<?php
+session_start();
+?>
+
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -50,6 +54,17 @@ Tylko martwi ujrzeli koniec wojny - Platon <br> <br>
     <input type="submit" value="Zaloguj się">
 
 </form>
+
+<?php
+    if( isset($_SESSION['blad']) ){     // << 1 >>
+        echo $_SESSION['blad'];
+    }
+?>
     
 </body>
 </html>
+
+<!-- 
+<< 1 >>    isset sprawdza czy w ogole jest taka zmienna utwrzona
+robimy to po to ZEBY BLAD NIE POKAZYWAL SIE JUZ NA SAMYM STARCIE APLIKACJI 
+-->
