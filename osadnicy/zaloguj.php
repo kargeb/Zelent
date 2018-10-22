@@ -12,6 +12,8 @@ if($polaczenie->connect_errno!=0){  //<< 4 >>
 
     echo "It works";
 
+    $sql = " SELECT * FROM uzytkownicy WHERE user='$login' AND pass='$haslo' "; // << 8 >>
+
     $polaczenie->close(); // << 6 >>
 }
 
@@ -95,6 +97,9 @@ $polaczenie->connect_errno => w tym wyraznieniu $polaczenie TO OBIEKT a connect_
     robimy to w else, nie poza ifem ! No bo zamkniecie polaczenia nieotwartego generuje blad
 
 << 7 >> usuwamy opis bledu bo widac nazwe uzytkownika bazy danych a po ciula komus postronnemu ta informacja !    
+    ktos zobaczy jaki mamy login admina "root" i juz bedzie wenszyl chuj
+
+
 
 36 MINUTA
  -->

@@ -2,7 +2,7 @@
 
 $host = "localhost";
 $db_user = "root";
-$db_password = "sdsds";
+$db_password = "";
 $db_name = "osadnicy";
 
 ?>
