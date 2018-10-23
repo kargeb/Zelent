@@ -214,4 +214,43 @@ $polaczenie->connect_errno => w tym wyraznieniu $polaczenie TO OBIEKT a connect_
 << 21 >> Jeszce ustwaiamy ze NIE ZALOGOWANY CHUJ nie mogl sie dostac dp gra.php wpisujac adresz palca         
 
 << 22 >> i tutaj tez bronimy sie przed tym zeby nikt niezalogowany po prostu nie wpisal sobie w adresei zaloguj.php
+ 
+ ---------------- NA TEN MOMENT MAMY OGARNIETY CAŁY WORKFLOW APLIKACJI !!! ------------------------
+
+ MUSIMY SIE JESZCZE OBRONIC prze
+    WSTRZYKIWANIEM KODU MYSQL 
+
+        1.    LOGOWANIE NA UZYTKONIWKA NIE ZNAJAC JEGO HASLA
+
+UWAGA ! Znając login kogoś można odjebać coś takiego:
+    logując się podajesz:   "marek' -- "  (słownie: marek, apostrof, spacja, dwa mysliniki, spacja)
+
+" -- " dwa myślniki to jest właśnie ZNAK KOMENTRAZA W MYSQL !!!     
+
+Czyli zapystanie wyglądające tak:
+    SELECT * FROM uzytkownicy WHERE user='$login' AND pass='$haslo'
+Zmieniliśmy na 
+     SELECT * FROM uzytkownicy WHERE user='marek' -- AND pass='$haslo'   
+
+     USUNĘLIŚMY CAŁĄ CZĘŚĆ PO LOGINIE !!!
+
+
+        2.    LOGOWANIE SIE NA PIERWSZEGO UZYTKONIWKA W BAZIE BEZ ZNAJOMOSCI NICZEGO 
+
+login: aaaa
+haslo:  ' OR 1=1 -- '
+
+Czyli zapystanie wyglądające tak:
+    SELECT * FROM uzytkownicy WHERE user='$login' AND pass='$haslo'
+Zmieniliśmy na 
+     SELECT * FROM uzytkownicy WHERE user='aaa' AND pass="OR 1=1 -- '        
+
+    OR 1-1 jest to tzw TAUTOLOGIA
+    TAUTOLOGIA - ZDANIE ZAWSZE PRAWDZIWE 
+
+Dzięki OR warunek przejdzie bo jest spelniony warunek.
+Test logowania dal wartosc TRUE
+
+MINUTA 1:26
+
  -->
