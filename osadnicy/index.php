@@ -82,5 +82,15 @@ robimy to po to ZEBY BLAD NIE POKAZYWAL SIE JUZ NA SAMYM STARCIE APLIKACJI
 
 << 4 >> DLATEGO KORZYSTAMY Z TAKIEJ FUNKCJI która natychmiast konczy wykonywanie pliku !!!        
 
+    UWAGA ! powstaje pytanie czemu nie uzylismy exit() w pliku zaloguj.php ??
+    DLATEGO ZE NIE WYKONALABY SIE WTEDY JEDNA Z OSTATNICH LINIJEK KODU
+        $polaczenie->close();   !!!
+    Czyli raz to exit() jest uzasadnione a raz NIE WOLNO !
+
+Przekierowanie swietnie dziala, nie ma mozliwosci nawet wejsc na strone logowania
+
+NO ALE TERAZ oczywiscie trzeba dac mozliwosc WYLGOGOWANIA
+ABY wylogowac uzytkoniwka, najlepiej jest po prostu ZNISZCZYC SESJE i wszystkie dane ktore przechowywala
+robimy to w nowym pliku  logout.php
 
 -->

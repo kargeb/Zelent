@@ -1,5 +1,10 @@
 <?php
     session_start();    // << 1 >>
+
+    if( !isset($_SESSION['zalogowany'])) {  // << 3 >>
+        header('Location: index.php');   
+        exit(); 
+    }
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +19,7 @@
 
 <?php
 
-echo "<p>Witaj ".$_SESSION['user']."!";
+echo "<p>Witaj ".$_SESSION['user'].'! [<a href="logout.php">Wyloguj się!</a>]</p> ';
 echo "<p><b>Drewno</b>:".$_SESSION['drewno'];
 echo "|<b>Kamień</b>:".$_SESSION['kamien'];
 echo "|<b>Zboże</b>:".$_SESSION['zboze']."</p>";
@@ -53,7 +58,18 @@ Jest ona przechowywana na serwerze I TYLKO PROGRAMISTA MOZE DO NIEJ ZAJRZEC
         M.in. dltaego W SESJI NIE POWINNO SIE PRZECHOWYWAC HASEL ! a co najwyzej
         login uzytkownika
 
+Przycisk wylogowania wstawiamy zaraz obok przywitania  
+    echo "<p>Witaj ".$_SESSION['user'].'! [<a href="logout.php">Wyloguj się!</a>]</p> ';
 
+<< 3 >> Ustawiamy jeszcze linijki ktore zabronią niezalogowanej osobie przejsc do gra.php
+    UWAGA ! Zwróć uwagę że jest tutaj operator "!" przed isset() !! Czy "JESLI NIE MA TEJ ZMIENNEJ"
 
+    TAKIEGO IFA DOKLEIMY DO KAZDEJ PODSTRONY KOTRA MOZE WIDZIEC WYLACZNIE ZALOGOWANY USER
 
+        if( !isset($_SESSION['zalogowany'])) {  // << 3 >>
+            header('Location: index.php');   
+            exit(); 
+        }
+
+ 
 -->

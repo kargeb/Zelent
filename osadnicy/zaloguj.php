@@ -2,6 +2,11 @@
 
 session_start();    // << 15 >>
 
+if ( ( !isset($_POST['login'] )) || ( !isset($_POST['haslo'] )) ){  // << 22 >>
+    header('Location: index.php');
+    exit();
+}
+
 require_once "connect.php"; //<< 2 >>
 
 $polaczenie = @new MySQLi($host, $db_user, $db_password, $db_name); // << 3 >>
@@ -203,4 +208,10 @@ $polaczenie->connect_errno => w tym wyraznieniu $polaczenie TO OBIEKT a connect_
         w dowolnym momencie programu - czy to zmiany surowców czy tez emaila        
 
         Obslugujemy teraz sytuacje w index.php gdzie ktos sie tam dostal a jest juz zalogowany
+
+        OBSLUGUJEMY WYLOGOWANIE UZYTKOWNIKA czyli tworzymy nowy plik logout.php ktory zniszczy sesje i wszystkie jej dane
+
+<< 21 >> Jeszce ustwaiamy ze NIE ZALOGOWANY CHUJ nie mogl sie dostac dp gra.php wpisujac adresz palca         
+
+<< 22 >> i tutaj tez bronimy sie przed tym zeby nikt niezalogowany po prostu nie wpisal sobie w adresei zaloguj.php
  -->
