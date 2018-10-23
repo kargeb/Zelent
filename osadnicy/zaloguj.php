@@ -21,8 +21,12 @@ if($polaczenie->connect_errno!=0){  //<< 4 >>
         $ilu_userow = $rezultat->num_rows;  //  << 10 >>
 
         if($ilu_userow>0) {// w zasadzie moze byc tez == 1
+
+            $_SESSION['zalogowany'] = true; // << 19 >> 
             
             $wiersz = $rezultat->fetch_assoc(); // << 11 >>
+
+            $_SESSION['id'] = $wiersz['id'];    // << 20 >>
             // $user = $wiersz['user']; - test przed wprowadzeniem do sesji
             $_SESSION['user'] = $wiersz['user']; // Taki sam zapis jak $_POST !!  // << 14 >>
             $_SESSION['drewno'] = $wiersz['drewno'];    // << 16 >>
@@ -191,7 +195,12 @@ $polaczenie->connect_errno => w tym wyraznieniu $polaczenie TO OBIEKT a connect_
         unset($_SESSION['blad'])    
         po chuj nam ona tutaj, nie trza jej tutaj
 
+<< 19 >>  Ustawiamy zmienna ktora da znac ze uzytkownik JEST juz zalogowany, informacja przeznaczona dla strony golwnej
+        JEST TO TZW FLAGA
+        FLAGA - jest to symbol bool (true/false) który ustawia sie jako symbol ZAJŚCIA CZEGOŚ w kodzie
 
-1:09 MINUTA  -  przed opisaniem tego ze po zalogowaniu na stronie logowania tez bylo wiadomo ze juz po zalogowaniu
-jest i nie trza sie juz logowac
+<< 20 >>    Dodamy sobie do tego zmienna z ID uzytkownika dzieki temu bedzie mozliwosc zmiany jego danych
+        w dowolnym momencie programu - czy to zmiany surowców czy tez emaila        
+
+        Obslugujemy teraz sytuacje w index.php gdzie ktos sie tam dostal a jest juz zalogowany
  -->

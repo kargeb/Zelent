@@ -30,6 +30,12 @@ od razu trzeba sobie powiedziec przed czym trzeba sie zabezpieczyc:
  -->
 <?php
 session_start();
+
+if ( ( isset( $_SESSION['zalogowany'] )) && ( $_SESSION['zalogowany'] == true ) ){  // << 2 >>
+    header('Location: gra.php');   // << 3 >>
+    exit(); // << 4 >>
+}
+
 ?>
 
 
@@ -67,4 +73,14 @@ Tylko martwi ujrzeli koniec wojny - Platon <br> <br>
 <!-- 
 << 1 >>    isset sprawdza czy w ogole jest taka zmienna utwrzona
 robimy to po to ZEBY BLAD NIE POKAZYWAL SIE JUZ NA SAMYM STARCIE APLIKACJI 
+
+<< 2 >> dzieki zmiennej $_SESSION['zaloguj'] utworzonej w zaloguj.php ustawiamy tutaj warunek
+    czy osoba powinna widziec panel logowania czy nie w zaleznosci od tego czy jest aktualnie zalogowana
+
+ << 3 >>   UWAGA ! instrukcja    header('Location: gra.php');  NIE POWODUJE NATYCHMIASTOWEGO PRZEKIEROWANIA,
+        Ona czeka az caly kod sie wykona I DOPIERO PO TYM nastepuje przekierowanie !
+
+<< 4 >> DLATEGO KORZYSTAMY Z TAKIEJ FUNKCJI która natychmiast konczy wykonywanie pliku !!!        
+
+
 -->
