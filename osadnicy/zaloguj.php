@@ -216,6 +216,8 @@ $polaczenie->connect_errno => w tym wyraznieniu $polaczenie TO OBIEKT a connect_
 << 22 >> i tutaj tez bronimy sie przed tym zeby nikt niezalogowany po prostu nie wpisal sobie w adresei zaloguj.php
  
  ---------------- NA TEN MOMENT MAMY OGARNIETY CAŁY WORKFLOW APLIKACJI !!! ------------------------
+            ---------------- PRZYKŁADY WSTRZYKIWANIA ------------------------
+
 
  MUSIMY SIE JESZCZE OBRONIC prze
     WSTRZYKIWANIEM KODU MYSQL 
@@ -251,6 +253,26 @@ Zmieniliśmy na
 Dzięki OR warunek przejdzie bo jest spelniony warunek.
 Test logowania dal wartosc TRUE
 
-MINUTA 1:26
+MINUTA 1:26     -- jeszce jeden przyklad wstrzykiwania
+Jesli odgadniesz nazwy kolumn to juz mozesz logowac sie jako ktokolwiek !
+
+DAWNIEJ mysql pozwalal na wykonywanie kilku zapytan umeiszczanych po ";"
+Wtedy mozna bylo rozpierdolic juz wszystko
+obecnie mozna przeslac wylacznie jedno zapytanie przez fukncje wiec troszke bezpieczniej jest
+
+---------------- OBRONA PRZED WSTRZYKIWANIEM ------------------------
+
+No więc:
+SQL injection(wstrzyiwanie SQL) - luka polehająca na nieodpowiednim filtrowaniu znaków
+    z danych wejściowych - przez co przechodzą niepowołane zapytania SQL
+
+    NIGDY NIE UFAJ CIĄGOM ZNAKÓW PRZEKAZANYCH PRZEZ UŻYTKOWNIKA !
+
+WALIDACJA - sprawdzanie poprawności danych
+SANITYZACJA - wyczyszczenie potencjalnie niebezpiecznych zapisów (np myslniki podwójne i apostrofy)
+
+wykorzystamy funckje "htmlentities()"
+
+
 
  -->
