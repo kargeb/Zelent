@@ -17,11 +17,24 @@ if($polaczenie->connect_errno!=0){  //<< 4 >>
     $login = $_POST['login'];
     $haslo = $_POST['haslo'];
 
+    // ------- zabezpiecznie przed atakami
+        $login = htmlentities($login, ENT_QUOTES, "UTF-8");     // << 23 >>
+        $haslo = htmlentities($haslo, ENT_QUOTES, "UTF-8");
+
     // echo "It works";
 
-    $sql = " SELECT * FROM uzytkownicy WHERE user='$login' AND pass='$haslo' "; // << 8 >>
+    /*  ZAMIENIAMY TO ZE WZGLĘDÓW BEZPIECZEŃSTA (koniec lekcji) I PAKUJEMY PROSTO DO IFA NA DOLE
+     $sql = " SELECT * FROM uzytkownicy WHERE user='$login' AND pass='$haslo' "; // << 8 >> 
+     */
 
-    if( $rezultat = @$polaczenie->query($sql) ) {
+    // << 24 >>
+    // if( $rezultat = @$polaczenie->query($sql) ) {   --- wersja przed zabezpieczniem
+    if( $rezultat = @$polaczenie->query(                
+        sprintf("SELECT * FROM uzytkownicy WHERE user='%s' AND pass='%s'",
+            mysqli_real_escape_string($polaczenie,$login),
+            mysqli_real_escape_string($polaczenie,$haslo)
+            )
+        )) {   
 
         $ilu_userow = $rezultat->num_rows;  //  << 10 >>
 
@@ -48,7 +61,7 @@ if($polaczenie->connect_errno!=0){  //<< 4 >>
             
         } else {
 
-            $_SESSION['blad'] = '<span style="color:red">Spierdalaj!</span>'; //  << 17 >>
+            $_SESSION['blad'] = '<span style="color:red">Zle dane!</span>'; //  << 17 >>
             header('Location: index.php');
         }
     }
@@ -273,6 +286,56 @@ SANITYZACJA - wyczyszczenie potencjalnie niebezpiecznych zapisów (np myslniki p
 
 wykorzystamy funckje "htmlentities()"
 
+<< 23 >>    htmlentities()  - doslowne tlumaczenie to encje HTML
 
+    $login = htmlentities($login, ENT_QUOTES, "UTF-8");  
 
+    ENCJA - zastępczy zestaw znaków !
+        czyli np znak HTML "<" posiada ENCJE &lt;
+
+    CZYLI JESLI PRZEZ htmlentites() 
+        przepuśmy:  <b>ToJAAdminSieNazywam</b> 
+        to efekt w kodzie będzie taki:  &lt;b&gt;ToJaAdminSienAzywam&lt;/b&gt;
+
+    NA tej samej zasadzie ENCJI dla tagów HTML wykorzytsamy ENCJE dla apostrofow i cudzyslowiow
+
+Oczywiście najlepiej już na starcie zabronić używania w loginie znaków takich jak "" lub ''
+
+POZOSTAŁE argumenty funkcji:
+
+    ENT_QUOTES mowi ze na encje zamień też właśnie "" oraz ''
+        jej alteratywa to ENT_NOQUOTES która te znaki zostawia jakie są
+
+    "UTF-8" to oczywiście kodowanie znaków
+
+<< 24 >>         
+
+    if( $rezultat = @$polaczenie->query(                
+        sprintf("SELECT * FROM uzytkownicy WHERE user='%s' AND pass='%s'",
+            mysqli_real_escape_string($polaczenie,$login),
+            mysqli_real_escape_string($polaczenie,$haslo)
+            )
+        ))
+
+    funkcja sprintf() SŁUŻY DO PORZĄDKOWANIA TAKICH ZAPYTAŃ
+        to co pod pierwszym %s jest dokldanie tym co pod pierwszym jej argumentem
+        a to co pod drugim %s to co pod argumentem drugim
+        oczywiscie w ziązku z tym ilość %s musi byc taka sama co argumnetow pozniej
+
+        czyli: %s ==  mysqli_real_escape_string($polaczenie,$login)
+
+    GDYBY NIE TA FUNKCJA wyglądałoby to tak:
+
+            if( $rezultat = @$polaczenie->query(                
+            "SELECT * FROM uzytkownicy WHERE user='"
+                .mysqli_real_escape_string($polaczenie,$login).'" AND pass='".
+                mysqli_real_escape_string($polaczenie,$haslo)."'"))
+
+        Czyli po prostu chodzi o czytelsnosc a juz w szczegolnosci gdy argumentow jest
+        wiecej niz dwa
+
+    mysqli_real_escape_string($polaczenie,$login) - specjalna funkcja mysql udostepniona uzytkownikom
+        ktora implementuje mechanizmy zapezpieczajace dane wejsciowe m.in. przez SANITYZACJE
+
+The End
  -->
